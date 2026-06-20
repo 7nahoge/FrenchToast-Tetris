@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>French Toast Tetris</title>
+<style>
+body{margin:0;background:#4169e1;color:#fff;font-family:Arial,sans-serif;text-align:center}
+h1{margin:10px}
+.wrap{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+canvas{background:#faf7ef;border:4px solid #c9a227}
+.panel{min-width:180px}
+button{padding:8px 12px;margin:5px}
+</style>
+</head>
+<body>
+<h1>French Toast Tetris</h1>
+<div class="wrap">
+<canvas id="game" width="300" height="600"></canvas>
+<div class="panel">
+<h3>スコア</h3>
+<div id="score">0</div>
+<h3>次の材料</h3>
+<canvas id="next" width="130" height="130" ></canvas>
+<p>←→移動<br>↑回転<br>↓加速<br>Space 即落下</p>
+<button onclick="restart()">リスタート</button>
+</div>
+</div>
+<script>
+const COLS=10, ROWS=20, SIZE=30;
+const cvs=document.getElementById("game");
+const ctx=cvs.getContext("2d");
+const nextCv=document.getElementById("next");
+const nctx=nextCv.getContext("2d");
+
+const products=[
+  ["🍞","#f0e68c"],
+  ["🥚","#ff9999"],
+  ["🧈","#bf7fff"],
+  ["🥭","#7fffbf"],
+  ["☕","#d6eaff"]
+];
+
+const shapes=[
+[[1,1,1,1]],
+[[1,1],[1,1]],
+[[0,1,0],[1,1,1]],
+[[1,1,0],[0,1,1]],
+[[0,1,1],[1,1,0]],
+[[1,0,0],[1,1,1]],
+[[0,0,1],[1,1,1]]
+];
+
+let board,score,piece,nextPiece,timer;
+
+function randPiece(){
+ const p=products[Math.floor(Math.random()*products.length)];
+ return {shape:JSON.parse(JSON.stringify(shapes[Math.floor(Math.random()*shapes.length)])),
+ x:3,y:0,name:p[0],color:p[1]};
+}
+
+function init(){
+ board=Array.from({length:ROWS},()=>Array(COLS).fill(null));
+ score=0;
+ piece=randPiece();
+ nextPiece=randPiece();
+ document.getElementById("score").textContent=score;
+}
+
+function drawCell(x,y,obj,scale=SIZE,target=ctx){
+
+ const px = x * scale;
+ const py = y * scale;
+
+ // 外枠
+ target.fillStyle = "#ffffff";
+ target.fillRect(px+1, py+1, scale-2, scale-2);
+
+ target.strokeStyle = "#333";
+ target.strokeRect(px+1, py+1, scale-2, scale-2);
+
+ // ===== 食パン =====
+ if(obj.name==="🍞"){
+   target.textAlign = "center";
+   target.textBaseline = "middle";
+
+   target.fillStyle="#f0e68c";
+   target.fillRect(px+1, py+1, scale-2, scale-2);
+
+   target.font=(scale*0.8)+"px sans-serif";
+   target.fillText("🍞", px+scale/2, py+scale/2);
+ }
+ // ===== たまご =====
+ else if(obj.name==="🥚"){
+   target.textAlign = "center";
+   target.textBaseline = "middle";
+
+   target.fillStyle="#ff9999";
+   target.fillRect(px+1, py+1, scale-2, scale-2);
+
+   target.font=(scale*0.8)+"px sans-serif";
+   target.fillText("🥚",  px+scale/2, py+scale/2);
+ }
+ // ===== バター =====
+ else if(obj.name==="🧈"){
+   target.textAlign = "center";
+   target.textBaseline = "middle";
+   
+   target.fillStyle="#bf7fff";
+   target.fillRect(px+1, py+1, scale-2, scale-2);
+
+   target.font=(scale*0.8)+"px sans-serif";
+   target.fillText("🧈",  px+scale/2, py+scale/2);
+ }
+ // ===== マンゴー =====
+ else if(obj.name==="🥭"){
+   target.textAlign = "center";
+   target.textBaseline = "middle";
+     
+   target.fillStyle="#7fffbf";
+   target.fillRect(px+1, py+1, scale-2, scale-2);
+
+   target.font=(scale*0.8)+"px sans-serif";
+   target.fillText("🥭",  px+scale/2, py+scale/2);
+ }
+ // ===== コーヒー =====
+ else if(obj.name==="☕"){
+   target.textAlign = "center";
+   target.textBaseline = "middle";
+     
+   target.fillStyle="#d6eaff";
+   target.fillRect(px+1, py+1, scale-2, scale-2);
+
+   target.font=(scale*0.8)+"px sans-serif";
+   target.fillText("☕",  px+scale/2, py+scale/2);
+ }
+}
+
+function draw(){
+ ctx.clearRect(0,0,cvs.width,cvs.height);
+ for(let y=0;y<ROWS;y++){
+  for(let x=0;x<COLS;x++){
+   if(board[y][x]) drawCell(x,y,board[y][x]);
+   else ctx.strokeRect(x*SIZE,y*SIZE,SIZE,SIZE);
+  }
+ }
+ piece.shape.forEach((r,dy)=>r.forEach((v,dx)=>{
+  if(v) drawCell(piece.x+dx,piece.y+dy,piece);
+ }));
+ drawNext();
+}
+
+function drawNext(){
+ nctx.clearRect(0,0,130,130);
+ nextPiece.shape.forEach((r,y)=>r.forEach((v,x)=>{
+  if(v) drawCell(x+1,y+1,nextPiece,25,nctx);
+ }));
+}
+
+function hit(nx,ny,s=piece.shape){
+ for(let y=0;y<s.length;y++){
+  for(let x=0;x<s[y].length;x++){
+   if(!s[y][x]) continue;
+   let px=nx+x, py=ny+y;
+   if(px<0||px>=COLS||py>=ROWS) return true;
+   if(py>=0 && board[py][px]) return true;
+  }
+ }
+ return false;
+}
+
+function rotate(){
+ const r=piece.shape[0].map((_,i)=>piece.shape.map(row=>row[i]).reverse());
+ if(!hit(piece.x,piece.y,r)) piece.shape=r;
+}
+
+function lock(){
+ piece.shape.forEach((r,y)=>r.forEach((v,x)=>{
+  if(v) board[piece.y+y][piece.x+x]=piece;
+ }));
+
+ let lines=0;
+ for(let y=ROWS-1;y>=0;y--){
+  if(board[y].every(v=>v)){
+   board.splice(y,1);
+   board.unshift(Array(COLS).fill(null));
+   lines++;
+   y++;
+  }
+ }
+ if(lines){
+  score += [0,100,300,500,800][lines];
+  document.getElementById("score").textContent=score;
+ }
+
+ piece=nextPiece;
+ nextPiece=randPiece();
+
+ if(hit(piece.x,piece.y)){
+   clearInterval(timer);
+   setTimeout(()=>alert("ゲームオーバー\nスコア:"+score),100);
+ }
+}
+
+function tick(){
+ if(!hit(piece.x,piece.y+1)) piece.y++;
+ else lock();
+ draw();
+}
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft"&&!hit(piece.x-1,piece.y)) piece.x--;
+ if(e.key==="ArrowRight"&&!hit(piece.x+1,piece.y)) piece.x++;
+ if(e.key==="ArrowDown"&&!hit(piece.x,piece.y+1)) piece.y++;
+ if(e.key==="ArrowUp") rotate();
+ if(e.code==="Space"){
+  while(!hit(piece.x,piece.y+1)) piece.y++;
+  lock();
+ }
+ draw();
+});
+
+function restart(){
+ clearInterval(timer);
+ init();
+ draw();
+ timer=setInterval(tick,500);
+}
+window.restart=restart;
+
+restart();
+</script>
+</body>
+</html>
