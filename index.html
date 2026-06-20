@@ -12,13 +12,13 @@ canvas{background:#faf7ef;border:4px solid #c9a227}
 .panel{min-width:180px}
 button{padding:8px 12px;margin:5px}
 .controls{
-  margin-top:10px;
+  margin-top:2px;
 }
 .controls button{
-  width:40px;
-  height:40px;
-  font-size:18px;
-  margin:4px;
+  width:50px;
+  height:50px;
+  font-size:21px;
+  margin:6px;
   border:none;
   border-radius:4px;
 }
@@ -28,7 +28,7 @@ button{padding:8px 12px;margin:5px}
 </style>
 </head>
 <body>
-<h1>French Toast Tetris</h1>
+<h3>French Toast Tetris</h3>
 <div class="wrap">
 <canvas id="game" width="250" height="500"></canvas>
 <div class="panel">
@@ -38,13 +38,14 @@ button{padding:8px 12px;margin:5px}
   <button id="rightBtn">▶</button>  
   <button id="downBtn">▼</button>
   <button id="dropBtn">DROP</button>
+  <br>
+  <h4>次の材料</h4>
+  <canvas id="next" width="120" height="80" ></canvas>
+  <button onclick="restart()">リスタート</button>
+  <h4>スコア</h4>
+  <div id="score">0</div>  
 </div>
-<h3>次の材料</h3>
-<canvas id="next" width="120" height="120" ></canvas>
-<h3>スコア</h3>
-<div id="score">0</div>
-<p>←→移動<br>↑回転<br>↓加速<br>Space 即落下</p>
-<button onclick="restart()">リスタート</button>
+<!-- <p>←→移動<br>↑回転<br>↓加速<br>Space 即落下</p> -->
 </div>
 </div>
 <script>
