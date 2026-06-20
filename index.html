@@ -23,32 +23,32 @@ button{padding:8px 12px;margin:5px}
   border-radius:4px;
 }
 #dropBtn{
-  width:40px;
+  width:80px;
 }
 </style>
 </head>
 <body>
 <h1>French Toast Tetris</h1>
 <div class="wrap">
-<canvas id="game" width="200" height="400"></canvas>
+<canvas id="game" width="250" height="500"></canvas>
 <div class="panel">
 <div class="controls">
   <button id="leftBtn">◀</button>
-  <button id="downBtn">▼</button>
   <button id="rotateBtn">↻</button>
-  <button id="rightBtn">▶</button>
+  <button id="rightBtn">▶</button>  
+  <button id="downBtn">▼</button>
   <button id="dropBtn">DROP</button>
-</div>  
+</div>
+<h3>次の材料</h3>
+<canvas id="next" width="120" height="120" ></canvas>
 <h3>スコア</h3>
 <div id="score">0</div>
-<h3>次の材料</h3>
-<canvas id="next" width="130" height="130" ></canvas>
 <p>←→移動<br>↑回転<br>↓加速<br>Space 即落下</p>
 <button onclick="restart()">リスタート</button>
 </div>
 </div>
 <script>
-const COLS=10, ROWS=20, SIZE=20;
+const COLS=10, ROWS=20, SIZE=25;
 const cvs=document.getElementById("game");
 const ctx=cvs.getContext("2d");
 const nextCv=document.getElementById("next");
