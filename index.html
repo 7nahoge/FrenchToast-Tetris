@@ -12,7 +12,7 @@ canvas{background:#faf7ef;border:4px solid #c9a227}
 .panel{min-width:180px}
 button{padding:8px 12px;margin:5px}
 .controls{
-  margin-top:0px;
+  margin-top:4px;
 }
 .controls button{
   width:50px;
@@ -23,15 +23,15 @@ button{padding:8px 12px;margin:5px}
   border-radius:4px;
 }
 #dropBtn{
-  font-size:16px;
-  width:60px;
+  font-size:21px;  
+  width:80px;
 }
 </style>
 </head>
 <body>
 <h3>French Toast Tetris</h3>
 <div class="wrap">
-<canvas id="game" width="250" height="500"></canvas>
+<canvas id="game" width="300" height="600"></canvas>
 <div class="panel" hidden="true">
 <h4>次の材料</h4>
 <canvas id="next" width="120" height="80" ></canvas>
@@ -49,7 +49,7 @@ button{padding:8px 12px;margin:5px}
   <button id="dropBtn">DROP</button>
 </div>
 <script>
-const COLS=10, ROWS=20, SIZE=25;
+const COLS=10, ROWS=20, SIZE=30;
 const cvs=document.getElementById("game");
 const ctx=cvs.getContext("2d");
 const nextCv=document.getElementById("next");
