@@ -31,6 +31,13 @@ button{padding:8px 12px;margin:5px}
 <h1>French Toast Tetris</h1>
 <div class="wrap">
 <canvas id="game" width="300" height="600"></canvas>
+<div class="controls">
+  <button id="leftBtn">◀</button>
+  <button id="downBtn">▼</button>
+  <button id="rotateBtn">↻</button>
+  <button id="rightBtn">▶</button>
+  <button id="dropBtn">DROP</button>
+</div>
 <div class="panel">
 <h3>スコア</h3>
 <div id="score">0</div>
@@ -39,13 +46,6 @@ button{padding:8px 12px;margin:5px}
 <p>←→移動<br>↑回転<br>↓加速<br>Space 即落下</p>
 <button onclick="restart()">リスタート</button>
 </div>
-</div>
-<div class="controls">
-  <button id="leftBtn">◀</button>
-  <button id="downBtn">▼</button>
-  <button id="rotateBtn">↻</button>
-  <button id="rightBtn">▶</button>
-  <button id="dropBtn">DROP</button>
 </div>
 <script>
 const COLS=10, ROWS=20, SIZE=30;
